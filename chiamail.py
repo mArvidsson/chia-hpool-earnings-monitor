@@ -4,23 +4,39 @@ import email
 import base64
 
 mail = imaplib.IMAP4_SSL("imap.gmail.com") # Standard protocol, port defaults to 993
-mail.login("email@gmail.com", "APP PASSWORD") # Gmail address and application password
-mail.select("chia") # Select inbox, in my case label is "chia" rather than "INBOX"
+id_list = [] # Initiate variable
 
-id_list = 0 # Initialise global list for all methods to access
+def init_mail():
+    try:
+        mail.login("test@gmail.com", "test") # Gmail address and application password
+        mail.select("chia") # Select inbox, in my case label is "chia" rather than "INBOX"
+        id_list = get_email_list() # Get newest index of inbox
+    except:
+        return("Failed to authenticate. Exiting...")
+        quit()
+    
+def exit_mail():
+    # Make sure we don't keep an open connection once we're done with business
+    try:
+        mail.close()
+        mail.logout()
+    except:
+        return("Failed to close mailbox!")
 
 def get_email_list():
     # Method to index the selected inbox
     # which in turns allows us to select
     # emails from ID 0 to the max index
-    
-    global id_list # Tell the method id_list is a global var so new data is available to all methods
 
-    print("Fetching emails...") # Let us know what we're doing
-    type, data = mail.search(None, "ALL") # Just read all mails in box.. why not? 
-    mail_ids = data[0]
-    id_list = mail_ids.split()
-    id_list.reverse() # Reverse list to put most recent emails first in index
+    try:
+        x, data = mail.search(None, "ALL") # Just read all mails in box.. why not? 
+        mail_ids = data[0]
+        list_ids = mail_ids.split()
+        list_ids.reverse() # Reverse list to put most recent emails first in index
+        return list_ids
+    except:
+        print("Failed to fetch email list. Exiting...")
+        quit()
 
 def getEarnings(emailid):
     # Method to fetch hpool earnings in 
@@ -37,7 +53,7 @@ def getEarnings(emailid):
             try:
                 return float(chia_earnings)
             except:
-                return 0
+                return []
 
 def getLifetimeEarnings():
     # Now we just loop through our beautiful getEarnings method
@@ -48,16 +64,26 @@ def getLifetimeEarnings():
     earnings = 0
     i = 0
 
-    get_email_list() # Get newest index of inbox
-
     for emails in id_list:
         new_earnings = getEarnings(i)
         if not prev_earnings == new_earnings:
             earnings = earnings + new_earnings
             prev_earnings = new_earnings
-            print("Adding " + str(prev_earnings) + " to total earnings of " + str(earnings)[:10] + " XCH") # Optional debug text
+            # Optional debug text, cutting down to 10 digits so we don't get random string errors
+            # print("Adding " + str(prev_earnings) + " to total earnings of " + str(earnings)[:10] + " XCH") 
         i+=1
-    print("Total earnings: " +str(earnings)[:10])
-    print("Emails parsed: "+ str(i))
 
+    # Debug printing
+    # print("Total earnings: " +str(earnings)[:10])
+    # print("Emails parsed: "+ str(i))
+
+    return earnings
+
+# Init mail to use program at all
+init_mail()
+
+# Main code
 getLifetimeEarnings()       # And get the money loop going!
+
+# Exit mailbox
+exit_mail()
