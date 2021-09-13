@@ -1,7 +1,5 @@
-from time import sleep
 import imaplib
 import email
-import base64
 
 mail = imaplib.IMAP4_SSL("imap.gmail.com") # Standard protocol, port defaults to 993
 id_list = [] # Initiate variable
@@ -75,8 +73,6 @@ def getLifetimeEarnings():
     earnings = 0
     i = 0
 
-    init_mail()
-
     for emails in id_list:
         new_earnings = getEarnings(i)
         if not prev_earnings == new_earnings:
@@ -89,8 +85,4 @@ def getLifetimeEarnings():
     # Debug printing
     # print("Total earnings: " +str(earnings)[:10])
     # print("Emails parsed: "+ str(i))
-
-    exit_mail()
     return earnings
-
-print(str(getLifetimeEarnings()))
