@@ -7,6 +7,7 @@ import digitalio
 import json
 import requests
 import adafruit_character_lcd.character_lcd as characterlcd
+import chiamail
 
 # Modify this if you have a different sized character LCD
 lcd_columns = 16
