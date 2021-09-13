@@ -1,5 +1,4 @@
 from subprocess import Popen, PIPE
-import time
 from time import sleep
 from datetime import datetime
 import board
@@ -7,7 +6,6 @@ import digitalio
 import json
 import requests
 import adafruit_character_lcd.character_lcd as characterlcd
-import chiamail
 
 # Modify this if you have a different sized character LCD
 lcd_columns = 16
@@ -144,5 +142,5 @@ while True:
         sys.exit(0)
 
 
-# Fetch time: atetime.now().strftime(' %b %d %H:%M:%S')
+# Fetch time: datetime.now().strftime(' %b %d %H:%M:%S')
 
