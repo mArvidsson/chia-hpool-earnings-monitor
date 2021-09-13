@@ -12,7 +12,7 @@ def init_mail():
         mail.select("chia") # Select inbox, in my case label is "chia" rather than "INBOX"
         id_list = get_email_list() # Get newest index of inbox
     except:
-        return("Failed to authenticate. Exiting...")
+        print("Failed to authenticate. Exiting..")
         quit()
     
 def exit_mail():
@@ -21,7 +21,7 @@ def exit_mail():
         mail.close()
         mail.logout()
     except:
-        return("Failed to close mailbox!")
+        print("Failed to close mailbox!")
 
 def get_email_list():
     # Method to index the selected inbox
@@ -35,7 +35,7 @@ def get_email_list():
         list_ids.reverse() # Reverse list to put most recent emails first in index
         return list_ids
     except:
-        print("Failed to fetch email list. Exiting...")
+        return("Failed to fetch email list. Exiting..")
         quit()
 
 def getEarnings(emailid):
